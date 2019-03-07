@@ -46,7 +46,7 @@ def create_model(X_train, Y_train, X_test, Y_test):
     class_weight = {0:1.0, 1:neg_pos_ratio}
 
     model = Sequential()
-    model.add(Dense({{choice([128, 256, 512])}}, input_dim=31,activation ='relu'))  #hidden layer
+    model.add(Dense({{choice([128, 256, 512])}}, input_dim=X_train.shape[1],activation ='relu'))  #hidden layer
     model.add(Activation('relu'))
     model.add(Dropout({{uniform(0, 1)}}))
     model.add(Dense({{choice([64, 128, 256])}}))
@@ -81,13 +81,13 @@ def create_model(X_train, Y_train, X_test, Y_test):
 
 
 df=pd.read_csv(sys.argv[1],delimiter = ';',skiprows = 0)
+df=df.drop(['id'], axis=1)
 df=df.dropna(axis=0,how='any')
-df= df.values
 
-# Features
-X = df[:,1:32]
 # Labels
-Y = df[:,0]
+Y = df["Severity"]
+# Features
+X = df.drop(['Severity'], axis=1).values
 
 np.set_printoptions(precision=3)
 
@@ -107,6 +107,9 @@ for train_index, test_index in skf.split(X, Y):
     np.savetxt('tmp_X_test.txt',s_X_test)
     np.savetxt('tmp_y_train.txt',Y_train)
     np.savetxt('tmp_y_test.txt',Y_test)
+    print(X_train.shape)
+    print(X_train.shape[0])
+    print(X_train.shape[1])
 
     best_run, best_model = optim.minimize(model=create_model, data=data, algo=tpe.suggest, max_evals=5, trials=Trials())
     print("Evalutation of best performing model:")

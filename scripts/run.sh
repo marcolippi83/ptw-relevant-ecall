@@ -1,6 +1,13 @@
-PYTHON=python3.6
+PYTHON=python3
 
-$PYTHON rf.py ../data/ptw.db > RESULTS_RF.txt
-$PYTHON svm.py ../data/ptw.db > RESULTS_SVM.txt
-$PYTHON dnn.py ../data/ptw.db > RESULTS_DNN.txt
+dataset=dataset_A.csv
+#dataset=dataset_B.csv
+#dataset=dataset_C.csv
+#dataset=dataset_D.csv
+
+$PYTHON lr.py ../data/$dataset > RESULTS_LR.txt
+$PYTHON rf.py ../data/$dataset > RESULTS_RF.txt
+$PYTHON svm_lin.py ../data/$dataset > RESULTS_SVM_LIN.txt
+$PYTHON svm_rbf.py ../data/$dataset > RESULTS_SVM_RBF.txt
+$PYTHON dnn.py ../data/$dataset > RESULTS_DNN.txt
 
